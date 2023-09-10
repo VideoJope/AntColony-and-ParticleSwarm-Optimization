@@ -37,8 +37,8 @@ class ArchiveT:
             rank = idx + 1
             self.weights[idx] = (1/(self.q * self.k * math.sqrt(2 * math.pi))) * math.pow(math.e, -((rank-1)**2)/(2 * (self.q**2) * (self.k**2)))
 
-    def optimize(self, iterations=100, numberOfAnts=2): #TODO: arrumar os argumentos padrões
-        self.solutionsTable = rng.uniform(-100, 100, [self.k, self.n]) #TODO: tirar o -100, 100 para depender do domínio da função a ser otimizada
+    def optimize(self, iterations=100, numberOfAnts=3): #TODO: arrumar os argumentos padrões
+        self.solutionsTable = rng.uniform(low=-10, high=10, size=[self.k, self.n]) #TODO: modificar o low e high para depender do domínio da função a ser otimizada
         self.__initWeights()
         self.__sortSolutionsTable()
 
@@ -65,7 +65,9 @@ class ArchiveT:
             # Sorting the updated solutions table based on the function to be optimized before starting the next iteration:
             self.__sortSolutionsTable()
         
-        print(self.solutionsTable)
+        print('Final Solutions Table:\n', self.solutionsTable)
+        print('Best Solution:\n', self.solutionsTable[0])
+        print('Cost of Best Solution:\n', self.function(np.array([self.solutionsTable[0]])))
 
 
-ArchiveT(function = fx.sphere, dimension = 2, archiveSize = 10, q=1, epsilon=1).optimize()
+ArchiveT(function = fx.ackley, dimension = 2, archiveSize = 10, q=1, epsilon=1).optimize()
