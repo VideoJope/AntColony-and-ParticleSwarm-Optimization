@@ -1,24 +1,22 @@
 import numpy as np
 import math
 
-from utils.objectiveFunction import (getObjectiveFunctionDataByFunctionId)
+from utils.objectiveFunction import ObjectiveFunction
 
 seed = 1337
 rng = np.random.default_rng(seed)
 
 class AntColonyR:
-    function = lambda x: x
-    limits = (0, 0)
-    n = 0
+    objective: ObjectiveFunction
 
     solutionsTable = np.array([[]])
     weights = np.array([])
 
     def __init__(self, functionId: str):
-        (self.function, self.limits, self.n) = getObjectiveFunctionDataByFunctionId(functionId)
+        self.objective = ObjectiveFunction(functionId)
 
     def __sortSolutionsTable(self):
-        solutionsAppliedToFunc = self.function(self.solutionsTable)
+        solutionsAppliedToFunc = self.objective.function(self.solutionsTable)
         orderedIndexes = np.argsort(solutionsAppliedToFunc)
         self.solutionsTable = self.solutionsTable[orderedIndexes]
 
@@ -29,7 +27,7 @@ class AntColonyR:
             self.weights[idx] = (1/(q * k * math.sqrt(2 * math.pi))) * math.pow(math.e, -((rank-1)**2)/(2 * (q**2) * (k**2)))
 
     def execute(self, iterations:int=100, numberOfAnts:int=3, k:int=10, q:float=1, epsilon:float=1):
-        self.solutionsTable = rng.uniform(low=self.limits[0], high=self.limits[1], size=[k, self.n])
+        self.solutionsTable = rng.uniform(low=self.objective.limits[0], high=self.objective.limits[1], size=[k, self.objective.dimensions])
         self.__initWeights(k, q)
         self.__sortSolutionsTable()
 
@@ -37,12 +35,12 @@ class AntColonyR:
             # Sampling an archive row for each ant based on weights array:
             getRowDiscreteProbability = lambda w: w/sum(self.weights)
             sampledRowsIndexes = rng.choice(k, size=numberOfAnts, p=getRowDiscreteProbability(self.weights))
-            newSolutionsSet = np.zeros(shape=(numberOfAnts, self.n))
+            newSolutionsSet = np.zeros(shape=(numberOfAnts, self.objective.dimensions))
             for antId in range(numberOfAnts):
                 antRowIndex = sampledRowsIndexes[antId]
                 # New solution construction:
-                newSolution = np.zeros(self.n)
-                for i in range(self.n):
+                newSolution = np.zeros(self.objective.dimensions)
+                for i in range(self.objective.dimensions):
                     # Constructing new solution component:
                     mean = self.solutionsTable[antRowIndex, i]
                     stdDeviation = (epsilon / (k - 1)) * sum(abs(np.delete(self.solutionsTable, antRowIndex, axis=0)[:,i] - self.solutionsTable[antRowIndex, i]))
@@ -58,4 +56,4 @@ class AntColonyR:
         
         print('Final solutions table:\n', self.solutionsTable)
         print('Best solution:\n', self.solutionsTable[0])
-        print('Cost of best solution:\n', self.function(np.array([self.solutionsTable[0]])))
+        print('Cost of best solution:\n', self.objective.function(np.array([self.solutionsTable[0]])))
