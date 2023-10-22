@@ -6,7 +6,7 @@ from utils.menuHelpers import MenuHelpers
 print('\n############\n# Welcome! #\n############')
 
 algorithmId = MenuHelpers.getAlgorithmIdInput()
-(function, limits) = MenuHelpers.getObjectiveFunctionInput()
+functionId = MenuHelpers.getObjectiveFunctionInput()
 
 iterations = MenuHelpers.getPositiveIntegerInput('Insert the number of iterations the selected algorithm will run for', default=100)
 
@@ -20,7 +20,7 @@ if(algorithmId == 'PSO'):
     socialParameter = MenuHelpers.getFloatInput('Insert the social coefficient parameter value', default=0.3)
     inertiaParameter = MenuHelpers.getFloatInput('Insert the inertia weight parameter value', default=0.9)
     # Executing optimization:
-    ParticleSwarm(function, limits).execute(iterations, numberOfParticles, cognitiveParameter, socialParameter, inertiaParameter)
+    ParticleSwarm(functionId).execute(iterations, numberOfParticles, cognitiveParameter, socialParameter, inertiaParameter)
 
 ##################
 ### ACOr Setup ###
@@ -32,5 +32,5 @@ elif(algorithmId == 'ACOr'):
     q = MenuHelpers.getFloatInput('Insert the q coefficient parameter value', default=1)
     epsilon = MenuHelpers.getFloatInput('Insert the epsilon coefficient parameter value', default=1)
     # Executing optimization:
-    AntColonyR(function, limits).execute(iterations=int(iterations), numberOfAnts=3, k=10, q=1, epsilon=1)
+    AntColonyR(functionId).execute(iterations=int(iterations), numberOfAnts=3, k=10, q=1, epsilon=1)
 

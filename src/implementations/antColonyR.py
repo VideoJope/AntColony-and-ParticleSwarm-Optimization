@@ -1,6 +1,8 @@
 import numpy as np
 import math
 
+from utils.objectiveFunction import (getObjectiveFunctionDataByFunctionId)
+
 seed = 1337
 rng = np.random.default_rng(seed)
 
@@ -12,10 +14,8 @@ class AntColonyR:
     solutionsTable = np.array([[]])
     weights = np.array([])
 
-    def __init__(self, function, limits, dimensions:int=2):
-        self.function = function
-        self.limits = limits
-        self.n = dimensions
+    def __init__(self, functionId: str):
+        (self.function, self.limits, self.n) = getObjectiveFunctionDataByFunctionId(functionId)
 
     def __sortSolutionsTable(self):
         solutionsAppliedToFunc = self.function(self.solutionsTable)
@@ -56,6 +56,6 @@ class AntColonyR:
             # Sorting the updated solutions table based on the function to be optimized before starting the next iteration:
             self.__sortSolutionsTable()
         
-        print('Final Solutions Table:\n', self.solutionsTable)
-        print('Best Solution:\n', self.solutionsTable[0])
-        print('Cost of Best Solution:\n', self.function(np.array([self.solutionsTable[0]])))
+        print('Final solutions table:\n', self.solutionsTable)
+        print('Best solution:\n', self.solutionsTable[0])
+        print('Cost of best solution:\n', self.function(np.array([self.solutionsTable[0]])))

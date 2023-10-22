@@ -1,5 +1,3 @@
-from utils.functions import (getObjectiveFunctionAndRangeByInputId)
-
 LINE_UP = '\033[1A' #ANSI escape code
 
 class MenuHelpers:
@@ -21,7 +19,10 @@ class MenuHelpers:
             print('  [3] Threehump function')
             print('  [4] Rastrigin function')
             inputString = input().strip()
-            if(inputString in ['1', '2', '3', '4']): return getObjectiveFunctionAndRangeByInputId(inputString)
+            if(inputString == '1'): return 'sphere'
+            if(inputString == '2'): return 'ackley'
+            if(inputString == '3'): return 'threehump'
+            if(inputString == '4'): return 'rastrigin'
             else: print('ERROR: Invalid value. Please insert one of the listed options\' number.')
 
 
