@@ -1,6 +1,7 @@
 from pyswarms.utils.functions import single_obj as fx
 
-def getFunctionParametersByFunctionId(functionId):
+#TODO: Fazer os limites do restante das funções
+def getObjectiveFunctionAndRangeByInputId(functionId):
     match functionId:
         case '1':
             return(fx.sphere)

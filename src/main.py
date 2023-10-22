@@ -1,32 +1,36 @@
 import sys
 from implementations.particleSwarm import ParticleSwarm
 from implementations.antColonyR import AntColonyR
-from utils.functions import *
+from utils.menuHelpers import MenuHelpers
 
 print('\n############\n# Welcome! #\n############')
 
-algorithmId = '0'
-while(algorithmId not in ['1', '2']):
-    print('\nSelect which algorithm you wish to execute by typing their respective number:')
-    print('  [1] Particle Swarm Optimization')
-    print('  [2] Ant Colony Optimization (Continuous Domain)')
-    algorithmId = input().strip()
+algorithmId = MenuHelpers.getAlgorithmIdInput()
+(function, limits) = MenuHelpers.getObjectiveFunctionInput()
 
-functionId = '0'
-while(functionId not in ['1', '2', '3', '4']):
-    print('\nSelect which objective function you wish to execute the selected algorithm on:')
-    print('  [1] Sphere function')
-    print('  [2] Ackley function')
-    print('  [3] Threehump function')
-    print('  [4] Rastrigin function')
-    functionId = input().strip()
-(function, limits) = getFunctionParametersByFunctionId(functionId)
+iterations = MenuHelpers.getPositiveIntegerInput('Insert the number of iterations the selected algorithm will run for', default=100)
 
-# PSO:
-if(algorithmId == '1'):
-    ParticleSwarm.execute(function, limits)
+#################
+### PSO Setup ###
+#################
+if(algorithmId == 'PSO'):
+    # Reading parameter values:
+    numberOfParticles = MenuHelpers.getPositiveIntegerInput('Insert the number of particles', default=10)
+    cognitiveParameter = MenuHelpers.getFloatInput('Insert the cognitive coefficient parameter value', default=0.5)
+    socialParameter = MenuHelpers.getFloatInput('Insert the social coefficient parameter value', default=0.3)
+    inertiaParameter = MenuHelpers.getFloatInput('Insert the inertia weight parameter value', default=0.9)
+    # Executing optimization:
+    ParticleSwarm(function, limits).execute(iterations, numberOfParticles, cognitiveParameter, socialParameter, inertiaParameter)
 
-# ACOr:
-elif(algorithmId == '2'):
-    AntColonyR(function = function, limits=limits, dimension = 2, archiveSize = 10, q=1, epsilon=1).execute()
+##################
+### ACOr Setup ###
+##################
+elif(algorithmId == 'ACOr'):
+    # Reading parameter values:
+    numberOfAnts =  MenuHelpers.getPositiveIntegerInput('Insert the number of ants', default=3)
+    k = MenuHelpers.getPositiveIntegerInput('Insert the size k (number of lines) of the solutions archive T', default=10)
+    q = MenuHelpers.getFloatInput('Insert the q coefficient parameter value', default=1)
+    epsilon = MenuHelpers.getFloatInput('Insert the epsilon coefficient parameter value', default=1)
+    # Executing optimization:
+    AntColonyR(function, limits).execute(iterations=int(iterations), numberOfAnts=3, k=10, q=1, epsilon=1)
 
