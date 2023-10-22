@@ -8,8 +8,9 @@ from pyswarms.utils.functions import single_obj as fx
 seed = 1337
 rng = np.random.default_rng(seed)
 
-class ArchiveT:
+class AntColonyR:
     function = lambda x: x
+    limits = (0, 0)
     n = 0
     k = 0
 
@@ -19,8 +20,9 @@ class ArchiveT:
     q = 1
     epsilon = 1
 
-    def __init__(self, function, dimension, archiveSize, q, epsilon):
+    def __init__(self, function, limits, dimension, archiveSize, q, epsilon):
         self.function = function
+        self.limits = limits
         self.n = dimension
         self.k = archiveSize
         self.q = q
@@ -37,8 +39,8 @@ class ArchiveT:
             rank = idx + 1
             self.weights[idx] = (1/(self.q * self.k * math.sqrt(2 * math.pi))) * math.pow(math.e, -((rank-1)**2)/(2 * (self.q**2) * (self.k**2)))
 
-    def optimize(self, iterations=100, numberOfAnts=3): #TODO: arrumar os argumentos padrões
-        self.solutionsTable = rng.uniform(low=-10, high=10, size=[self.k, self.n]) #TODO: modificar o low e high para depender do domínio da função a ser otimizada
+    def execute(self, iterations=100, numberOfAnts=3): #TODO: arrumar os argumentos padrões
+        self.solutionsTable = rng.uniform(low=self.limits[0], high=self.limits[1], size=[self.k, self.n]) #TODO: modificar o low e high para depender do domínio da função a ser otimizada
         self.__initWeights()
         self.__sortSolutionsTable()
 
@@ -70,4 +72,4 @@ class ArchiveT:
         print('Cost of Best Solution:\n', self.function(np.array([self.solutionsTable[0]])))
 
 
-ArchiveT(function = fx.ackley, dimension = 2, archiveSize = 10, q=1, epsilon=1).optimize()
+# AntColonyR(function = fx.ackley, dimension = 2, archiveSize = 10, q=1, epsilon=1).execute()
