@@ -33,4 +33,3 @@ elif(algorithmId == 'ACOr'):
     epsilon = MenuHelpers.getFloatInput('Insert the epsilon coefficient parameter value', default=1)
     # Executing optimization:
     AntColonyR(functionId).execute(iterations=int(iterations), numberOfAnts=3, k=10, q=1, epsilon=1)
-

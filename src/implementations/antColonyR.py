@@ -31,11 +31,13 @@ class AntColonyR:
         self.__initWeights(k, q)
         self.__sortSolutionsTable()
 
+        # Iteration loop:
         for _ in range(iterations):
             # Sampling an archive row for each ant based on weights array:
             getRowDiscreteProbability = lambda w: w/sum(self.weights)
             sampledRowsIndexes = rng.choice(k, size=numberOfAnts, p=getRowDiscreteProbability(self.weights))
             newSolutionsSet = np.zeros(shape=(numberOfAnts, self.objective.dimensions))
+            # Following procedure is executed by each ant this iteration step:
             for antId in range(numberOfAnts):
                 antRowIndex = sampledRowsIndexes[antId]
                 # New solution construction:
@@ -44,8 +46,8 @@ class AntColonyR:
                     # Constructing new solution component:
                     mean = self.solutionsTable[antRowIndex, i]
                     stdDeviation = (epsilon / (k - 1)) * sum(abs(np.delete(self.solutionsTable, antRowIndex, axis=0)[:,i] - self.solutionsTable[antRowIndex, i]))
-                    newSolution[i] = rng.normal(mean, stdDeviation)
-                # New solution found by this ant added to the set of new solutions found this iteration:
+                    newSolution[i] = np.clip(rng.normal(mean, stdDeviation), self.objective.limits[0], self.objective.limits[1])
+                # New solution found by current ant added to the set of new solutions found this iteration:
                 newSolutionsSet[antId] = newSolution
             # Removing the numberOfAnts worst solutions from the solutions table:
             self.solutionsTable = self.solutionsTable[:-numberOfAnts]
@@ -54,6 +56,6 @@ class AntColonyR:
             # Sorting the updated solutions table based on the function to be optimized before starting the next iteration:
             self.__sortSolutionsTable()
         
-        print('Final solutions table:\n', self.solutionsTable)
+        print('\nFinal solutions table:\n', self.solutionsTable)
         print('Best solution:\n', self.solutionsTable[0])
         print('Cost of best solution:\n', self.objective.function(np.array([self.solutionsTable[0]])))

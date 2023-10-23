@@ -32,15 +32,15 @@ class ParticleSwarm:
         # Perform optimization
         (best_cost, best_pos) = optimizer.optimize(self.objective.function, iters=iterations)
 
-        print('Final particle population position:\n', optimizer.pos_history[-1])
+        print('\nFinal particle population position:\n', optimizer.pos_history[-1])
         print('Best solution:\n', best_pos)
         print('Cost of best solution:\n', best_cost)
 
         # Render visualization
         limits2D = [self.objective.limits, self.objective.limits]
-        mesher2D = Mesher(func=self.objective.function, levels=self.objective.mesher2DLevels, limits=limits2D, delta=0.1)
+        mesher2D = Mesher(func=self.objective.function, levels=self.objective.mesher2DLevels, limits=limits2D, delta=0.01)
         animationContour: matplotlib.animation.Animation = plot_contour(optimizer.pos_history, mesher=mesher2D, designer=Designer(limits=limits2D, label=["x-axis", "y-axis"]))
         matplotlib.animation.FFMpegWriter(animationContour)
         plot_cost_history(optimizer.cost_history)
-        print('Close all visualization windows or send an interrupt signal (ctrl+c) to quit the program.')
+        print('Close all visualization windows or interrupt the program (ctrl+c) to exit.')
         plt.show()

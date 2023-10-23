@@ -13,7 +13,7 @@ class ObjectiveFunction:
             case 'sphere':
                 self.function = fx.sphere
                 self.limits = (-1, 1)
-                self.mesher2DLevels = np.arange(0, 0.8, 0.015)
+                self.mesher2DLevels = np.arange(0, 1, 0.02)
             case 'ackley':
                 self.function = fx.ackley
                 self.limits = (-10, 10)
@@ -25,6 +25,6 @@ class ObjectiveFunction:
             case 'rastrigin':
                 self.function = fx.rastrigin
                 self.limits = (-5.12, 5.12)
-                self.mesher2DLevels = np.arange(0, 50, 5)
+                self.mesher2DLevels = np.arange(0, 100, 5)
             case _:
                 raise Exception('Invalid function id')
