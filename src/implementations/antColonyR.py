@@ -2,6 +2,8 @@ import numpy as np
 import math
 
 from utils.objectiveFunction import ObjectiveFunction
+from pyswarms.utils.plotters import (plot_cost_history)
+import matplotlib.pyplot as plt
 
 seed = 1337
 rng = np.random.default_rng(seed)
@@ -11,6 +13,8 @@ class AntColonyR:
 
     solutionsTable = np.array([[]])
     weights = np.array([])
+
+    costHistory = np.array([[]])
 
     def __init__(self, functionId: str):
         self.objective = ObjectiveFunction(functionId)
@@ -55,7 +59,12 @@ class AntColonyR:
             self.solutionsTable = np.append(self.solutionsTable, newSolutionsSet, axis=0)
             # Sorting the updated solutions table based on the function to be optimized before starting the next iteration:
             self.__sortSolutionsTable()
+            # Appending to the cost history the cost of the best solution from this iteration
+            self.costHistory = np.append(self.costHistory, self.objective.function(np.array([self.solutionsTable[0]]))) 
         
         print('\nFinal solutions table:\n', self.solutionsTable)
         print('Best solution:\n', self.solutionsTable[0])
         print('Cost of best solution:\n', self.objective.function(np.array([self.solutionsTable[0]])))
+        plot_cost_history(self.costHistory)
+        print('Close all visualization windows or interrupt the program (ctrl+c) to exit.')
+        plt.show()
